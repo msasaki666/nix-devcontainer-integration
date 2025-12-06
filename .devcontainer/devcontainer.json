@@ -1,0 +1,33 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/base:jammy",
+  "features": {
+    "ghcr.io/devcontainers/features/nix:1": {
+      "version": "2.32",
+      "multiUser": true,
+      "packages": [],
+      "extraNixConfig": "experimental-features = nix-command flakes,keep-outputs = true,keep-derivations = true"
+    }
+  },
+  "onCreateCommand": "nix profile add nixpkgs#direnv nixfmt-tree.#treefmt && nix develop --command direnv allow",
+  "containerEnv": {
+    "PROJECT_DIR": "${containerWorkspaceFolder}"
+  },
+  "remoteUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+          }
+        },
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "nix.formatterPath": "treefmt"
+      },
+      "extensions": [
+        "bbenoist.nix",
+        "mkhl.direnv"
+      ]
+    }
+  }
+}
