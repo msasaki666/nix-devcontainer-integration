@@ -1,8 +1,26 @@
 {
-  # このFlakeには依存がないのでinputsを省略
-  # inputs = { };
+  description = "Development environment with direnv";
 
-  outputs = _inputs: {
-    hello = "Hello, world!";
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
   };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            direnv
+          ];
+
+          shellHook = ''
+            echo "direnv is available in this development environment"
+          '';
+        };
+      }
+    );
 }
