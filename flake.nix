@@ -16,16 +16,27 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        # VSCode拡張機能などがグローバルに使用するツール
+        globalTools = with pkgs; [
+          direnv
+          nixfmt-tree
+        ];
       in
       {
         formatter = pkgs.nixfmt-tree;
+
+        # グローバルにインストールするパッケージセット
+        packages.globalTools = pkgs.buildEnv {
+          name = "devcontainer-global-tools";
+          paths = globalTools;
+        };
+
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            direnv
-          ];
+          buildInputs = globalTools;
 
           shellHook = ''
-            echo "direnv is available in this development environment"
+            echo "Development environment loaded"
+            echo "Available tools: direnv, nixfmt-tree"
           '';
         };
       }
