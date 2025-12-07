@@ -19,8 +19,7 @@
         # VSCode拡張機能などがグローバルに使用するツール
         globalTools = with pkgs; [
           direnv
-          treefmt
-          nixfmt-rfc-style
+          nixfmt-tree
         ];
       in
       {
@@ -37,7 +36,7 @@
 
           shellHook = ''
             echo "Development environment loaded"
-            echo "Available tools: direnv, treefmt, nixfmt"
+            echo "Available tools: direnv, nixfmt-tree"
           '';
         };
       }
