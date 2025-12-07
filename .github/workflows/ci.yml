@@ -3,8 +3,24 @@ name: CI
 on:
   push:
     branches: ["main"]
+    paths:
+      - "flake.nix"
+      - "flake.lock"
+      - ".envrc"
+      - ".devcontainer/**"
+      - ".github/workflows/**"
   pull_request:
     branches: ["**"]
+    types: [opened, synchronize, reopened]
+    paths:
+      - "flake.nix"
+      - "flake.lock"
+      - ".envrc"
+      - ".devcontainer/**"
+      - ".github/workflows/**"
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,6 +30,7 @@ jobs:
   checks:
     name: Nix Checks
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       # 共通セットアップ
       - name: Checkout repository
