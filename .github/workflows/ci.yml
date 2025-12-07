@@ -24,7 +24,12 @@ jobs:
         run: nix flake check --show-trace
 
       - name: Show flake outputs
-        run: nix flake show
+        run: |
+          echo "## Flake Outputs" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          nix flake show >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          nix flake show
 
       - name: Build globalTools package
         run: nix build .#globalTools --print-build-logs
