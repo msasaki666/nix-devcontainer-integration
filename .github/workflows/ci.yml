@@ -2,9 +2,25 @@ name: CI
 
 on:
   push:
-    branches: ["**"]
+    branches: ["main"]
+    paths:
+      - "flake.nix"
+      - "flake.lock"
+      - ".envrc"
+      - ".devcontainer/**"
+      - ".github/workflows/**"
   pull_request:
     branches: ["**"]
+    types: [opened, synchronize, reopened]
+    paths:
+      - "flake.nix"
+      - "flake.lock"
+      - ".envrc"
+      - ".devcontainer/**"
+      - ".github/workflows/**"
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,10 +30,11 @@ jobs:
   checks:
     name: Nix Checks
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       # 共通セットアップ
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Nix
         uses: DeterminateSystems/nix-installer-action@v13
