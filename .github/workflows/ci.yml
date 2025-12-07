@@ -55,5 +55,9 @@ jobs:
       - name: Test direnv availability
         run: nix develop --command direnv --version
 
+      - name: Test treefmt availability (optional)
+        continue-on-error: true
+        run: nix develop --command treefmt --version
+
       - name: Test development shell loads
         run: nix develop --command echo "Development shell loaded successfully"
