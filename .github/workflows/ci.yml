@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  nix-checks:
+    name: Nix Flake Checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v13
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v7
+
+      - name: Check flake
+        run: nix flake check --show-trace
+
+      - name: Show flake outputs
+        run: nix flake show
+
+      - name: Build globalTools package
+        run: nix build .#globalTools --print-build-logs
+
+      - name: Check Nix formatting
+        run: nix fmt -- --check .
+
+  dev-environment:
+    name: Development Environment Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v13
+
+      - name: Setup Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@v7
+
+      - name: Test direnv availability
+        run: nix develop --command direnv --version
+
+      - name: Test treefmt availability
+        run: nix develop --command treefmt --version
+
+      - name: Test development shell loads
+        run: nix develop --command echo "Development shell loaded successfully"
