@@ -8,7 +8,7 @@
       "extraNixConfig": "experimental-features = nix-command flakes,keep-outputs = true,keep-derivations = true"
     }
   },
-  "onCreateCommand": "nix profile add nixpkgs#direnv nixfmt-tree.#treefmt && nix develop --command direnv allow",
+  "onCreateCommand": "nix develop --command direnv allow",
   "containerEnv": {
     "PROJECT_DIR": "${containerWorkspaceFolder}"
   },

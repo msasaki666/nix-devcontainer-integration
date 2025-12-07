@@ -22,10 +22,13 @@
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             direnv
+            treefmt
+            nixfmt-rfc-style
           ];
 
           shellHook = ''
-            echo "direnv is available in this development environment"
+            echo "Development environment loaded"
+            echo "Available tools: direnv, treefmt, nixfmt"
           '';
         };
       }
