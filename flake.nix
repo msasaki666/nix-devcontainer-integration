@@ -16,15 +16,24 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        # VSCode拡張機能などがグローバルに使用するツール
+        globalTools = with pkgs; [
+          direnv
+          treefmt
+          nixfmt-rfc-style
+        ];
       in
       {
         formatter = pkgs.nixfmt-tree;
+
+        # グローバルにインストールするパッケージセット
+        packages.globalTools = pkgs.buildEnv {
+          name = "devcontainer-global-tools";
+          paths = globalTools;
+        };
+
         devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            direnv
-            treefmt
-            nixfmt-rfc-style
-          ];
+          buildInputs = globalTools;
 
           shellHook = ''
             echo "Development environment loaded"
