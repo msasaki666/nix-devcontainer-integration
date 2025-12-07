@@ -57,7 +57,7 @@ jobs:
 
       - name: Test treefmt availability (optional)
         continue-on-error: true
-        run: nix develop --command treefmt --version
+        run: nix develop --command treefmt --help
 
       - name: Test development shell loads
         run: nix develop --command echo "Development shell loaded successfully"
