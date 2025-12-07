@@ -11,10 +11,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  nix-checks:
-    name: Nix Flake Checks
+  checks:
+    name: Nix Checks
     runs-on: ubuntu-latest
     steps:
+      # 共通セットアップ
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -24,6 +25,7 @@ jobs:
       - name: Setup Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@v7
 
+      # Flake チェック
       - name: Check flake
         run: nix flake check --show-trace
 
@@ -38,24 +40,13 @@ jobs:
       - name: Build globalTools package
         run: nix build .#globalTools --print-build-logs
 
+      # フォーマットチェック
       - name: Check Nix formatting
         run: |
           nix fmt
           git diff --exit-code --color=always
 
-  dev-environment:
-    name: Development Environment Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v13
-
-      - name: Setup Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@v7
-
+      # 開発環境テスト
       - name: Test direnv availability
         run: nix develop --command direnv --version
 
